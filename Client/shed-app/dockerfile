@@ -1,0 +1,9 @@
+FROM node
+WORKDIR /
+COPY . .
+RUN npm install
+EXPOSE 8080
+EXPOSE 8081
+EXPOSE 3306
+EXPOSE 3000
+CMD ["npm", "start"]

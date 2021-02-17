@@ -1,0 +1,2 @@
+INSERT INTO items (id, name, description, pricePerHour, pricePerDay, imageURL1)
+VALUES (1, 'Ladder', 'Good quality ladder', 1.50, 5, 'https://www.altonladders.co.uk/files/clow_ws_timber_ladder_single_section_to_bs1129_class_1.jpg');

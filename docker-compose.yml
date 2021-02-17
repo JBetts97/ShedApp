@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  mysql:
+    build:
+      context: ./Server/
+      dockerfile: ./src/mysql/dockerfile
+    restart: always
+    working_dir: /Server/src/mysql
+    container_name: mysql-backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=shedapp
+    ports:
+      - "3306:3306"
+    volumes:
+    - "./Server/src/mysql/scripts/1_setupUserTable.sql:/docker-entrypoint-initdb.d/1.sql"
+    - "./Server/src/mysql/scripts/2_initUserTable.sql:/docker-entrypoint-initdb.d/2.sql"
+    - "./Server/src/mysql/scripts/3_setupItemsTable.sql:/docker-entrypoint-initdb.d/3.sql"
+    - "./Server/src/mysql/scripts/4_initItemsTable.sql:/docker-entrypoint-initdb.d/4.sql"
+
+  node-backend:
+    build: 
+      context: ./Server/
+      dockerfile: ./dockerfile
+    restart: unless-stopped
+    depends_on: 
+      - mysql
+    container_name: node-backend
+    volumes:
+    - ./Server/node_modules:/node_modules
+    - ./Server/src:/src
+    links:
+      - mysql:mysql
+    ports:
+      - "8081:8081"
+
+  node-frontend:
+    build:
+      context: ./Client/shed-app/
+      dockerfile: ./dockerfile
+    restart: unless-stopped
+    container_name: node-frontend
+    volumes:
+    - "./Client/shed-app/src:/src"
+    depends_on:
+    - mysql
+    links:
+      - mysql:mysql
+    ports:
+      - "3000:3000"
