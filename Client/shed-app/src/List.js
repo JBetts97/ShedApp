@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { withRouter, useHistory } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { withRouter, BrowserRouter } from 'react-router-dom';
 
 import axios from "axios";
 import Dashboard from './Dashboard';
@@ -10,7 +11,7 @@ import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
 import logo from './assets/cover-logo.png';
 
-export class List extends Component {
+class List extends React.Component {
 
     constructor(props) {
         super(props);
@@ -20,8 +21,25 @@ export class List extends Component {
             pricePerHour: 0,
             pricePerDay: 0,
             imageURL1: "",
+            postcode: ""
         }
+        this.state = {
+            user: [],
+        }
+
+        this.state.user = this.props.location.state.user;
+
         this.updateCredentials = this.updateCredentials.bind(this);
+    }
+
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired
+      }
+
+    componentDidMount(){
+        
     }
 
     handleChange(event) {
@@ -30,61 +48,54 @@ export class List extends Component {
         });
     }
 
-    updateCredentials(name, description, pricePerHour, pricePerDay, imageURL1) {
+    updateCredentials(name, description, pricePerHour, pricePerDay, imageURL1, postcode) {
         this.setState({
             name: name,
             description: description,
             pricePerHour: pricePerHour,
             pricePerDay: pricePerDay,
-            imageURL1: imageURL1
+            imageURL1: imageURL1,
+            postcode: postcode
         })
     }
 
 
     handleSubmit(event) {
-    const { name, description, pricePerHour, pricePerDay, imageURL1 } = this.state;
+        const { name, description, pricePerHour, pricePerDay, imageURL1, postcode } = this.state;
+        const { router, match, location, history } = this.props
 
-    axios
-      .post(
-        "http://localhost:8081/list",
-        {
-            name: name,
-            description: description,
-            pricePerHour: pricePerHour,
-            pricePerDay: pricePerDay,
-            imageURL1: imageURL1, 
-        },
-      )
-      .then(response => {
-        if (response.data.error == false) {
-          this.props.history.push({
-            pathname: '/',
+        axios
+            .post(
+                "http://localhost:8081/list",
+                {
+                    name: name,
+                    description: description,
+                    pricePerHour: pricePerHour,
+                    pricePerDay: pricePerDay,
+                    imageURL1: imageURL1,
+                    postcode: postcode,
+                    username: this.state.user[0]
+                },
+            )
+            .then(response => {
+                if (response.data.error == false) {
+                    this.props.history.push({
+                        pathname: '/',
+                    });
+                } else {
+                    this.state.messages = response.data.message;
+                    this.forceUpdate();
+                }
+            })
+            .catch(error => {
+                console.log("login error", error);
             });
-        } else {
-          this.state.messages = response.data.message;
-          this.forceUpdate();
-      }
-    })
-      .catch(error => {
-        console.log("login error", error);
-        });
-    event.preventDefault();
-  }
+        event.preventDefault();
+    }
 
     render() {
+        
         let alertbox;
-        if (this.state.messages != "") {
-            alertbox =
-                <div className="alert">
-                    <Alert variant="danger">
-                        <Alert.Heading>Error</Alert.Heading>
-                        <hr />
-                        <p>
-                            {this.state.messages}
-                        </p>
-                    </Alert>
-                </div>
-        }
 
         return (
 
@@ -123,6 +134,11 @@ export class List extends Component {
                                 <Form.Control name="imageURL1" type="imageURL1" placeholder="Image URL" onChange={this.handleChange.bind(this)} />
                             </Form.Group>
 
+                            <Form.Group controlId="formBasicPassword">
+                                <Form.Label>Location Postcode</Form.Label>
+                                <Form.Control name="postcode" type="postcode" placeholder="Postcode" onChange={this.handleChange.bind(this)} />
+                            </Form.Group>
+
                             <Button variant="primary" type="submit" >
                                 Create
   </Button>
@@ -138,6 +154,7 @@ export class List extends Component {
             </div>
 
         );
+
     }
 }
 

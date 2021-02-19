@@ -6,6 +6,7 @@ import Register from './Register';
 import List from './List';
 import Dashboard from './Dashboard';
 import NotFound from './NotFound';
+import InfoDetail from './Info';
 export default class App extends Component {
 
   render() {
@@ -25,6 +26,9 @@ export default class App extends Component {
             <Route exact path="/dashboard">
               <Dashboard />
             </Route>
+          <Route exact path="/info">
+          <InfoDetail />
+          </Route>
           <Route path="/*"><NotFound/></Route>
       </Switch>
       </BrowserRouter>

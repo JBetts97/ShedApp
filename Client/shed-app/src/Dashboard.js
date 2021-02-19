@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withRouter} from 'react-router-dom'
+import { withRouter, useHistory } from 'react-router-dom'
 
 import axios from "axios";
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -13,30 +13,53 @@ import Nav from 'react-bootstrap/Nav';
 import logo from './assets/std-logo.png';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearchLocation } from '@fortawesome/free-solid-svg-icons'
 import Card from 'react-bootstrap/Card';
+import List from './List';
 
 class Dashboard extends React.Component {
+  constructor(props){
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleList = this.handleList.bind(this);
+    this.state = {
+      items: []
+    };
+  }
+
   static propTypes = {
     match: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired
   }
-
-  state = {
-    items: []
-  }
-
+  
   componentDidMount() {
     axios.get(`http://localhost:8081/items`)
       .then(res => {
         const items = res.data;
         this.setState({ items });
       })
-}
+  }
 
+  handleClick(e) {
+    this.props.history.push({
+      pathname: "/info",
+      state: {info: e}
+    })
+  }
+
+  handleList(e) {    
+    this.props.history.push({
+      pathname: "/list",
+      state: { user: Object.values(e) }
+     })
+  }
+  
   render() {
 
   const { router, match, location, history } = this.props
+
   
   return (
     <div>
@@ -48,7 +71,7 @@ class Dashboard extends React.Component {
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="mr-auto">
       <Nav.Link href="/">Home</Nav.Link>
-      <Nav.Link href="/list">List</Nav.Link>
+      <Nav.Link onClickCapture={() => this.handleList(this.props.location.state.detail)}>List</Nav.Link>
       <Nav.Link href="/">Logout</Nav.Link>
     </Nav>
     <Form inline>
@@ -83,13 +106,16 @@ class Dashboard extends React.Component {
       </Card.Title>
     <Card.Text>
     {item.description}
+    <div className="BadgeHour">
+      <Badge variant="warning"><FontAwesomeIcon icon={faSearchLocation} /> {item.postcode}</Badge>
+      </div>
     </Card.Text>
     <Card.Text>
       <div className="BadgeHour">
-      <Badge variant="info">£{item.pricePerHour}/hour</Badge>
+      <Badge variant="dark">£{item.pricePerHour}/hour</Badge>
       <Badge className="Badge" variant="dark">£{item.pricePerDay}/day</Badge>
       </div>
-    <Button variant="primary">More Info</Button>
+    <Button variant="info" onClick={() => this.handleClick(item)}>More Info</Button>
     </Card.Text>
   </Card.Body>
 </Card>
