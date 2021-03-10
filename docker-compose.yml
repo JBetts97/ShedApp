@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 services:
   mysql:
     build:
@@ -42,6 +42,7 @@ services:
     container_name: node-frontend
     volumes:
     - "./Client/shed-app/src:/src"
+    - "./Client/shed-app/node_modules:/node_modules"
     depends_on:
     - mysql
     links:
