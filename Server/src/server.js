@@ -4,8 +4,11 @@ var mysql = require('mysql2');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var jsonParser = bodyParser.json({ extended: false })
-const jwt = require('jsonwebtoken');
 const { url } = require('inspector');
+var {protect} = require('./middleware/authMiddleware.js')
+var jwt = require('jsonwebtoken')
+
+
 
 // Setup Connection
 var con = mysql.createConnection({
@@ -43,7 +46,7 @@ app.get('/', function (req, res) {
 })
 
 // Get route for users
-app.get('/users', function (req, res) {
+app.get('/users', protect, function (req, res) {
   con.query("SELECT * FROM users", function (err, result, fields) {
     if (err) throw err;
     res.send(result);
@@ -51,12 +54,18 @@ app.get('/users', function (req, res) {
 })
 
 // Get route for items
-app.get('/items', function (req, res) {
+app.get('/items', protect, function (req, res) {
   con.query("SELECT * FROM items", function (err, result, fields) {
     if (err) throw err;
     res.send(result);
   })
 })
+
+// generate a new token function. Replace 'shedApp2021' with your choice of key
+const generateToken = (id) => {
+
+  return jwt.sign({ id }, 'shedApp2021', { expiresIn: '30d' });
+}
 
 // Get Route for Login
 app.post('/login', jsonParser, (req, res) => {
@@ -79,6 +88,7 @@ con.query(
             password: result[0].password, 
             firstname: result[0].firstname,
             loggedIn: true,
+            token: generateToken(result[0].id)
             };
           res.send(user);
         } else {
@@ -101,7 +111,7 @@ app.post('/register', jsonParser, function (req, res) {
 });
 
 // Add a new item  
-app.post('/list', jsonParser, function (req, res) {
+app.post('/list', protect, jsonParser, function (req, res) {
   let item = req.body;
   con.query("INSERT INTO items SET ? ", item, function (error, results, fields) {
     if (error) throw error;
