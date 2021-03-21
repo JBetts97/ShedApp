@@ -7,8 +7,7 @@ var jsonParser = bodyParser.json({ extended: false })
 const { url } = require('inspector');
 var {protect} = require('./middleware/authMiddleware.js')
 var jwt = require('jsonwebtoken')
-
-
+const cors = require('cors');
 
 // Setup Connection
 var con = mysql.createConnection({
@@ -18,6 +17,8 @@ var con = mysql.createConnection({
   database: "shedapp",
   insecureAuth : true
 });
+
+app.use(cors())
 
 // Add headers
 app.use(function (req, res, next) {

@@ -17,6 +17,7 @@ export class Login extends Component {
     this.state = {
       username: "",
       password: "",
+      token: "",
       messages: ""
     }
     this.updateCredentials = this.updateCredentials.bind(this);
@@ -28,27 +29,29 @@ export class Login extends Component {
     });
   }
 
-  updateCredentials(username, password) {
+  updateCredentials(username, password, token) {
     this.setState({
       username: username,
-      password: password
+      password: password,
+      token: token
     })
   }
 
   handleSubmit(event) {
-    const { username, password } = this.state;
+    const { username, password, token } = this.state;
 
     axios
       .post(
         "http://localhost:8081/login",
         {
             username: username,
-            password: password 
+            password: password, 
+            token: token
         },
       )
       .then(response => {
         if (response.data.loggedIn) {
-          this.updateCredentials(response.data.username, response.data.password);
+          this.updateCredentials(response.data.username, response.data.password, response.data.token);
           this.props.history.push({
             pathname: '/dashboard',
             state: { detail: response.data }});
