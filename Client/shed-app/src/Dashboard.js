@@ -35,7 +35,11 @@ class Dashboard extends React.Component {
   }
   
   componentDidMount() {
-    axios.get(`http://localhost:8081/items`)
+    axios.get(`http://localhost:8081/items`, {
+      headers: {
+        'Authorization' : 'Bearer ' + this.props.location.state.detail.token
+      }
+    })
       .then(res => {
         const items = res.data;
         this.setState({ items });
