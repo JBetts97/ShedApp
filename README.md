@@ -53,7 +53,7 @@ To get started simply:
 [] Many more to come in future!
 
 ## Documentation
-// TODO
+Please refer to the `/docs` directory.
 
 ## Contributing
 Contributions are highly encouraged, no matter how big or small. <br>
