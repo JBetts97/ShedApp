@@ -17,15 +17,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearchLocation } from '@fortawesome/free-solid-svg-icons'
 import Card from 'react-bootstrap/Card';
 import List from './List';
+import ReactLoading from 'react-loading';
+
+import { authenticationService } from './services/authentication.service';
 
 class Dashboard extends React.Component {
   constructor(props){
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.handleList = this.handleList.bind(this);
+    
     this.state = {
+      currentUser: authenticationService.currentUserValue,
+      users: null,
       items: []
-    };
+  };
+
   }
 
   static propTypes = {
@@ -35,9 +42,10 @@ class Dashboard extends React.Component {
   }
   
   componentDidMount() {
+    
     axios.get(`http://localhost:8081/items`, {
       headers: {
-        'Authorization' : 'Bearer ' + this.props.location.state.detail.token
+        'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('token'))
       }
     })
       .then(res => {
@@ -55,17 +63,21 @@ class Dashboard extends React.Component {
 
   handleList(e) {    
     this.props.history.push({
-      pathname: "/list",
-      state: { user: Object.values(e) }
+      pathname: "/list"
      })
   }
   
   render() {
 
-  const { router, match, location, history } = this.props
+  const { currentUser, users, router, match, location, history } = this.props;
 
-  
-  return (
+  if (localStorage.getItem("token") === null) { window.location.reload(); return (
+    <h1>Loading...</h1>
+  )
+    
+  }
+
+  if (localStorage.getItem("token") != null) { return (
     <div>
       <div>
         <div>
@@ -75,8 +87,8 @@ class Dashboard extends React.Component {
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="mr-auto">
       <Nav.Link href="/">Home</Nav.Link>
-      <Nav.Link onClickCapture={() => this.handleList(this.props.location.state.detail)}>List</Nav.Link>
-      <Nav.Link href="/">Logout</Nav.Link>
+      <Nav.Link onClickCapture={() => this.handleList()}>List</Nav.Link>
+      <Nav.Link href="/logout">Logout</Nav.Link>
     </Nav>
     <Form inline>
       <FormControl type="text" placeholder="Search" className="mr-sm-2" />
@@ -88,7 +100,7 @@ class Dashboard extends React.Component {
         <div className="Dashboard-header">
         <Jumbotron>
           
-  <h1>Welcome back, {this.props.location.state.detail.firstname} </h1>
+  <h1>Welcome back, {JSON.parse(localStorage.getItem('name'))} </h1>
   <p>
     Welcome to ShedApp.
   </p>
@@ -127,7 +139,8 @@ class Dashboard extends React.Component {
 )}
 </div>
     </div>
-  );
+  )
+};
 }};
 
 export default withRouter(Dashboard);

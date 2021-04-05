@@ -7,6 +7,7 @@ import List from './List';
 import Dashboard from './Dashboard';
 import NotFound from './NotFound';
 import InfoDetail from './Info';
+import Logout from './Logout';
 export default class App extends Component {
 
   render() {
@@ -28,6 +29,9 @@ export default class App extends Component {
             </Route>
           <Route exact path="/info">
           <InfoDetail />
+          </Route>
+          <Route exact path="/logout">
+          <Logout />
           </Route>
           <Route path="/*"><NotFound/></Route>
       </Switch>

@@ -10,6 +10,8 @@ import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
 import logo from './assets/cover-logo.png';
 
+import { authenticationService } from './services/authentication.service';
+
 export class Login extends Component {
 
   constructor(props){
@@ -38,47 +40,37 @@ export class Login extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
+
     const { username, password, token } = this.state;
 
-    axios
-      .post(
-        "http://localhost:8081/login",
-        {
-            username: username,
-            password: password, 
-            token: token
-        },
-      )
-      .then(response => {
-        if (response.data.loggedIn) {
-          this.updateCredentials(response.data.username, response.data.password, response.data.token);
-          this.props.history.push({
-            pathname: '/dashboard',
-            state: { detail: response.data }});
-        } else {
-          this.state.messages = response.data.message;
-          this.forceUpdate();
-      }
-    })
-      .catch(error => {
-        console.log("login error", error);
-        });
-    event.preventDefault();
-  }
+    authenticationService.login(username, password)
+
+    if (localStorage.getItem('error') != undefined) {
+        this.props.history.push({
+          pathname: '/dashboard'}
+        )}
+}
 
 render() {
   let alertbox;
-  if (this.state.messages != ""){
+  if (localStorage.getItem('error') != undefined) {
     alertbox = 
     <div className="alert">
       <Alert variant="danger">
   <Alert.Heading>Error</Alert.Heading>
   <hr />
   <p>
-  {this.state.messages}
+  {localStorage.getItem('error')}
   </p>
 </Alert>
       </div>
+  }
+
+  if ( localStorage.getItem('currentUser') != null && localStorage.getItem('currentUser') != undefined) {
+    this.props.history.push({
+      pathname: '/dashboard'
+    })
   }
 
     return (

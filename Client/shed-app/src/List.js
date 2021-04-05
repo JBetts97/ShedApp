@@ -27,8 +27,6 @@ class List extends React.Component {
             user: [],
         }
 
-        this.state.user = this.props.location.state.user;
-
         this.updateCredentials = this.updateCredentials.bind(this);
     }
 
@@ -64,19 +62,25 @@ class List extends React.Component {
         const { name, description, pricePerHour, pricePerDay, imageURL1, postcode } = this.state;
         const { router, match, location, history } = this.props
 
+        var data = {
+                'name': name,
+                'description': description,
+                'pricePerHour': pricePerHour,
+                'pricePerDay': pricePerDay,
+                'imageURL1': imageURL1,
+                'postcode': postcode,
+                'username': JSON.parse(localStorage.getItem('user'))
+        }
+
+        var headers = {
+            'Authorization' : 'Bearer ' + JSON.parse(localStorage.getItem('token'))
+        }
+
         axios
             .post(
-                "http://localhost:8081/list",
-                {
-                    name: name,
-                    description: description,
-                    pricePerHour: pricePerHour,
-                    pricePerDay: pricePerDay,
-                    imageURL1: imageURL1,
-                    postcode: postcode,
-                    username: this.state.user[0]
-                },
-            )
+                "http://localhost:8081/list", data, {
+                    headers: headers
+                })
             .then(response => {
                 if (response.data.error == false) {
                     this.props.history.push({
