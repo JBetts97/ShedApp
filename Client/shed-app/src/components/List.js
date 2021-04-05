@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
-import logo from './assets/cover-logo.png';
+import logo from '../assets/cover-logo.png';
 
 class List extends React.Component {
 

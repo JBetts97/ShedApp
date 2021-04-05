@@ -1,13 +1,13 @@
 import './App.css';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import React, { Component } from "react";
-import Login from './Login';
-import Register from './Register';
-import List from './List';
-import Dashboard from './Dashboard';
-import NotFound from './NotFound';
-import InfoDetail from './Info';
-import Logout from './Logout';
+import Login from './components/Login';
+import Register from './components/Register';
+import List from './components/List';
+import Dashboard from './components/Dashboard';
+import NotFound from './components/NotFound';
+import InfoDetail from './components/Info';
+import Logout from './components/Logout';
 export default class App extends Component {
 
   render() {

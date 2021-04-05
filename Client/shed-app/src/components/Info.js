@@ -10,7 +10,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import logo from './assets/std-logo.png';
+import logo from '../assets/std-logo.png';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
 import Col from "react-bootstrap/Col";

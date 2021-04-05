@@ -10,7 +10,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import logo from './assets/std-logo.png';
+import logo from '../assets/std-logo.png';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,7 +19,7 @@ import Card from 'react-bootstrap/Card';
 import List from './List';
 import ReactLoading from 'react-loading';
 
-import { authenticationService } from './services/authentication.service';
+import { authenticationService } from '../services/authentication.service';
 
 class Dashboard extends React.Component {
   constructor(props){
