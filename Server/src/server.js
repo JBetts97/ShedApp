@@ -120,6 +120,30 @@ app.post('/list', protect, jsonParser, function (req, res) {
   });
 });
 
+// Modify a user
+app.post('/usermodify', protect, jsonParser, function (req, res) {
+  let username = req.body.username;
+  let email = req.body.email;
+  con.query("UPDATE users SET email = ? WHERE username = ?", [email, username], function (error, results, fields) {
+    if (error) throw error;
+    return res.send({ error: false, data: results, message: 'User data has been updated successfully.' });
+  });
+});
+
+// Return a specific user
+app.post('/userdetail', protect, jsonParser, function (req, res) {
+  let username = req.body.username;
+  con.query(
+    "SELECT * FROM users WHERE username = ?;",
+    username,
+    (err, result) => {
+      if (err) {
+        res.send({ err: err });
+      }
+      return res.send(result);
+    })
+})
+
 // Where the server is setup
 var server = app.listen(8081, function () {
    var host = server.address().address

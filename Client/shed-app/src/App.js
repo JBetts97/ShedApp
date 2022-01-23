@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import NotFound from './components/NotFound';
 import InfoDetail from './components/Info';
 import Logout from './components/Logout';
+import Profile from './components/Profile';
 export default class App extends Component {
 
   render() {
@@ -32,6 +33,9 @@ export default class App extends Component {
           </Route>
           <Route exact path="/logout">
           <Logout />
+          </Route>
+          <Route exact path="/profile">
+            <Profile />
           </Route>
           <Route path="/*"><NotFound/></Route>
       </Switch>
